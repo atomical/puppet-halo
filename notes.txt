@@ -1,0 +1,13 @@
+
+
+d3dx9_36
+
+directx9
+sudo apt-get install xvfb
+screen -S HaloPC xvfb-run -a env WINEDEBUG=-all LIBGL_DEBUG=verbose wineconsole --backend=curses haloded.exe
+sudo apt-get install xorg
+
+# known to work
+winetricks sound=oss
+winetricks ddr=opengl
+winetricks winhttp
