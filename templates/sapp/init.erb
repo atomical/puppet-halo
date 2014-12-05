@@ -1,21 +1,22 @@
-map_load bloodgulch
+<% @maps.each do |map| %>map_load <%= map %><% end %>
+
 sv_mapcycle_add bloodgulch "team slayer"
 dns s1.master.hosthpc.com
 dns s1.ms01.hosthpc.com
 dns halo.macgamingmods.com
-no_lead 1
-anticaps 1
-antispam 1
-afk_kick 500
-;ping_kick 320
-collect_aliases 1
-spawn_protection 3
-log_name halo-server
-packet_limit 0
-antihalofp 0
-antiwarp 20
-save_scores 1
-mtv 1
+<% if @ping_kick %>ping_kick <%= @ping_kick %><% end %>
+<% if @afk_kick %>afk_kick <%= @afk_kick %><% end %>
+<% if @collect_aliases %>collect_aliases <%= @collect_aliases %><% end %>
+<% if @spawn_protection %>spawn_protection <%= @spawn_protection %><% end %>
+<% if @antihalofp %>antihalofp <%= @antihalofp %><% end %>
+<% if @anti_warp %>antiwarp <%= @anti_warp %><% end %>
+<% if @lua %>lua <%= @lua %><% end %>
+<% if @anti_caps %>anticaps <%= @anti_caps %><% end %>
+<% if @anti_spam %>antispam <%= @anti_spam %><% end %>
+<% if @no_lead %>no_lead <%= @no_lead %><% end %>
+<% if @save_scores %>save_scores <%= @save_scores %><% end %>
 log 1
-lua 1
-;lua_load sprinting
+log_name sapp.log
+save_scores 1
+packet_limit 0
+mtv 1

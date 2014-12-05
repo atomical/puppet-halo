@@ -1,12 +1,10 @@
 sv_name "<%= @name %>"
 sv_maxplayers <%= @max_players %>
-sv_motd "<%= @motd %>"
+sv_motd "motd.txt"
 sv_public True
 sv_timelimit <%= @time_limit %>
 sv_mapcycle_timeout <%= @map_cycle_timeout %>
 sv_friendly_fire 1
-<% if @password %>
-sv_rcon_password "<%= @rcon_password %>"
-<% end %>
+<% if @password %> sv_rcon_password "<%= @rcon_password %>"<% end %>
 load
 sv_mapcycle_begin
