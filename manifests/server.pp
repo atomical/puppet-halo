@@ -5,7 +5,7 @@ define halo::server(
 
   # in game configuration
   $name              = undef,
-  $port              = 2302,
+  $port              = undef,
   $maps              = [],
 
   # sapp specific
@@ -16,11 +16,10 @@ define halo::server(
   $rcon_password     = undef,
   $no_lead           = 1,
   $ping_kick         = 0,
-  $no_lead           = 1,
   $antihalofp        = 0,
   $log               = 1,
   $lua               = 1,
-  $spawn_protection  = 2,
+  $spawn_protection  = 0,
   $collect_aliases   = 1,
   $afk_kick          = 600,
   $anti_warp         = 0,

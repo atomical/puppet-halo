@@ -1,11 +1,25 @@
 class halo::wine {
-  # exec { "apt-get update":
-  #     command => "/usr/bin/apt-get update"
-  # }
+  class { 'apt':
+    always_apt_update    => true,
+    apt_update_frequency => undef,
+    disable_keys         => undef,
+    proxy_host           => false,
+    proxy_port           => '8080',
+    purge_sources_list   => false,
+    purge_sources_list_d => false,
+    purge_preferences_d  => false,
+    update_timeout       => undef,
+    fancy_progress       => undef
+  }
 
-  package { 'wine': 
-    ensure => present,
-    # require  => Exec['apt-get update'],
+  exec {"wine_update":
+    command => "apt-get update -y",
+    user => root,
+  }
+
+  package { "wine":
+    ensure => latest,
+    require => Exec['wine_update'],
   }
 
   exec { 'winetricks sound=oss':
