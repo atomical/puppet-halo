@@ -1,5 +1,6 @@
 define halo::server(
   $path        = undef,
+  $map_path    = '/var/halo_maps',
   $owner       = undef,
   $group       = undef,
 
@@ -35,45 +36,26 @@ define halo::server(
   include halo::wine
   include upstart
 
-  file { "${path}":
-    ensure  => directory,
+  file { $path:
+    source => "puppet:///modules/halo/server",
     owner   => $owner,
     group   => $group,
+    recurse => true,
   }
 
-  file { "${path}/sapp":
-    ensure  => directory,
+  file{ "${path}/maps":
+    ensure  => link,
+    target  => $map_path,
     owner   => $owner,
     group   => $group,
+    require => File[$map_path],
   }
 
-  file { "${path}/haloded.exe":
-    ensure => present,
-    source => "puppet:///modules/halo/haloded.exe",
-    owner  => $owner,
-    group  => $group,
-  }
-  
-  file { "${path}/sapp.dll":
-    ensure => present,
-    source => "puppet:///modules/halo/sapp.dll",
-    owner  => $owner,
-    group  => $group,
-  }
-  
-  file { "${path}/strings.dll":
-    ensure => present,
-    source => "puppet:///modules/halo/strings.dll",
-    owner  => $owner,
-    group  => $group,
-  }
-  
   file { "${path}/init.txt":
     path    => "${path}/init.txt",
     owner   => $owner,
     group   => $group,
     content => template('halo/init.erb'),
-    require => File["${path}"],
   }
 
   file { "${path}/sapp/init.txt":
@@ -81,7 +63,6 @@ define halo::server(
     owner   => $owner,
     group   => $group,
     content => template('halo/sapp/init.erb'),
-    require => File["${path}/sapp"],
   }
 
   file { "${path}/motd.txt":
@@ -91,30 +72,10 @@ define halo::server(
     content => template('halo/motd.erb'),
   }
 
-  file{ "${path}/maps":
-    ensure  => directory,
-    owner   => $owner,
-    group   => $group,
-  }
+  File[$path] -> File[$map_path] -> File["${path}/maps"] -> File["${path}/init.txt"] -> 
+  File["${path}/sapp/init.txt"] -> File["${path}/motd.txt"] -> Upstart::Job[$title]
 
-  file { "${path}/maps/bloodgulch.map":
-    ensure => present,
-    source => 'puppet:///modules/halo/bloodgulch.map',
-    owner  => $owner,
-    group  => $group,
-    require => File["${path}/maps"],
-  }
-
-  file { "${path}/maps/ui.map":
-    ensure => present,
-    source => 'puppet:///modules/halo/ui.map',
-    owner  => $owner,
-    group  => $group,
-    require => File["${path}/maps"],
-  }
-
-
-  upstart::job { $formatted_name:
+  upstart::job { $title:
     description    => 'halo server',
     version        => "3626f2",
     respawn        => true,
@@ -123,25 +84,7 @@ define halo::server(
     group          => $group,
     chdir          => $path,
     exec           => "/usr/bin/wine haloded.exe -path ${path} -port ${port}",
+    require        => Class['halo::wine'],
   }
-  # first map
-  # archive { 'bigassv3_1.zip':
-  #   ensure => present,
-  #   url    => 'http://halomd.macgamingmods.com/mods/bigassv3_1.zip',
-  #   target => "${path}/maps",
-  #   follow_redirects => true,
-  #   checksum => true,
-  #   src_target => '/tmp',
-  # }
-
-  # archive { 'imposing_1.zip':
-  #   ensure => present,
-  #   url    => 'http://halomd.macgamingmods.com/mods/imposing_1.zip',
-  #   target => "${path}/maps",
-  #   follow_redirects => true,
-  #   checksum => true,
-  #   src_target => '/tmp',
-  # }
-
 
 }
