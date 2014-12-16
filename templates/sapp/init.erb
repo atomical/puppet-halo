@@ -1,9 +1,6 @@
+<% @dns_servers.each do |dns| %>dns <%= dns %><% end %>
 <% @maps.each do |map| %>map_load <%= map %><% end %>
-
-sv_mapcycle_add bloodgulch "team slayer"
-dns s1.master.hosthpc.com
-dns s1.ms01.hosthpc.com
-dns halo.macgamingmods.com
+<% @maps.each do |map| %>sv_mapcycle_add <%= map %> "<%= @game_type %>" <% end %>
 <% if @ping_kick %>ping_kick <%= @ping_kick %><% end %>
 <% if @afk_kick %>afk_kick <%= @afk_kick %><% end %>
 <% if @collect_aliases %>collect_aliases <%= @collect_aliases %><% end %>
@@ -17,5 +14,4 @@ dns halo.macgamingmods.com
 <% if @save_scores %>save_scores <%= @save_scores %><% end %>
 log 1
 log_name sapp
-save_scores 1
 packet_limit 0

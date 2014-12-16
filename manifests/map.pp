@@ -1,15 +1,23 @@
 define halo::map (
-  $name = undef,
-  $path = undef,
+  $path = '/var/halo_maps',
+  $extension = undef,
   $url  = undef,
 ){
 
-   archive { $name:
+   archive { $title:
     ensure => present,
+    timeout => 20000,
     url    => $url,
-    target => "${path}/maps",
+    extension => $extension,
+    target => $path,
     follow_redirects => true,
     checksum => true,
     src_target => '/tmp',
   }
 }
+
+# example
+# halo::map{ 'bigassv3_1':
+#   url => 'http://halomd.macgamingmods.com/mods/bigassv3_1.zip',
+#   extension => 'zip',
+# }

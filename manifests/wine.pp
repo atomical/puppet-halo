@@ -12,14 +12,14 @@ class halo::wine {
     fancy_progress       => undef
   }
 
-  exec {"wine_update":
-    command => "apt-get update -y",
-    user => root,
-  }
+  # exec {"wine_update":
+  #   command => "apt-get update -y",
+  #   user => root,
+  # }
 
   package { "wine":
     ensure => latest,
-    require => Exec['wine_update'],
+    require => Class['apt'],
   }
 
   exec { 'winetricks sound=oss':

@@ -3,11 +3,13 @@ define halo::server(
   $map_path    = '/var/halo_maps',
   $owner       = undef,
   $group       = undef,
+  $dns_servers = ['halo.macgamingmods.com'],  # or s1.ms01.hosthpc.com or s1.master.hosthpc.com
 
   # in game configuration
   $name              = undef,
   $port              = undef,
   $maps              = [],
+  $game_type         = undef,
 
   # sapp specific
   $max_players       = 16,
@@ -80,11 +82,14 @@ define halo::server(
     version        => "3626f2",
     respawn        => true,
     respawn_limit  => '5 10',
-    user           => $user,
+    user           => $owner,
     group          => $group,
     chdir          => $path,
     exec           => "/usr/bin/wine haloded.exe -path ${path} -port ${port}",
     require        => Class['halo::wine'],
+    kill_signal    => 'SIGKILL',
+    # restart        => [File["${path}/sapp/init.txt"]],
+    subscribe      => [File["${path}/sapp/init.txt"], File["${path}/init.txt"],],
   }
 
 }
